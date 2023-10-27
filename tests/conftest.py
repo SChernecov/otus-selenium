@@ -4,16 +4,18 @@ from pages.admin_login_page import AdminLoginPage
 from pages.register_page import RegisterPage
 
 
-@pytest.fixture()
-def main_page():
-    return MainPage()
 
 
 @pytest.fixture()
-def admin_login_page():
-    return AdminLoginPage()
+def main_page(browser):
+    return MainPage(browser)
 
 
 @pytest.fixture()
-def register_page():
-    return RegisterPage()
+def admin_login_page(browser):
+    return AdminLoginPage(browser)
+
+
+@pytest.fixture()
+def register_page(browser):
+    return RegisterPage(browser)
