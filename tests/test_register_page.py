@@ -1,7 +1,9 @@
 from tests.base_test import BaseTest
+from models.randoms.fake import random_letters, random_email
+from tests.base_test import BaseTestRegisterPage
 
 
-class TestRegisterPage(BaseTest):
+class TestRegisterPage(BaseTestRegisterPage):
 
     def test_open_register_page(self):
         self.register_page.open()
@@ -9,11 +11,7 @@ class TestRegisterPage(BaseTest):
         assert self.register_page.title == "Register Account", \
             f"Incorrect browser title:{self.register_page.title}"
 
-    def test_registration(self):
-        self.register_page.open()
-        self.register_page.fill_credentials()
-        self.register_page.click_continue_button()
-
+    def test_registration(self, create_new_user):
         assert self.register_page.get_success_registration_text() == \
                "Your Account Has Been Created!\n" \
                "Congratulations! Your new account has been " \

@@ -11,18 +11,27 @@ class TestMainPage(BaseTest):
 
     def test_change_currency_euro(self):
         self.main_page.open()
-        self.main_page.click_on_currency_drop_down()
-        self.main_page.click_on_currency_eur()
 
+        all_currency = self.main_page.get_all_currency()
+        assert len(all_currency) == 3, "Incorrect numbers of currency"
+
+        self.main_page.change_currency_euro()
         assert self.main_page.get_currency_value() == "€" \
+            , "Incorrect currency value"
+
+        self.main_page.change_currency_pound()
+        assert self.main_page.get_currency_value() == "£" \
+            , "Incorrect currency value"
+
+        self.main_page.change_currency_us()
+        assert self.main_page.get_currency_value() == "$" \
             , "Incorrect currency value"
 
 
 class TestCatalog(BaseTest):
     def test_navigate_all_desktops(self):
         self.main_page.open()
-        self.main_page.click_on_desktops_tab()
-        self.main_page.click_on_show_all_desktops()
+        self.main_page.navigate_to_desktops()
 
         assert self.main_page.get_product_directory() == "Desktops" \
             , "Incorrect product directory"
