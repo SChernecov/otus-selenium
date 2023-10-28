@@ -28,12 +28,11 @@ class BasePage:
     def open_page(self, locator):
         try:
             self.browser.get(self.browser.url)
-            if True:
-                try:
-                    self.find(locator)
-                except TimeoutException:
-                    raise AssertionError(f"Not found locator: {locator}")
-        except:
+            try:
+                self.find(locator)
+            except TimeoutException:
+                raise AssertionError(f"Not found locator: {locator}")
+        except Exception:
             raise WebDriverException()
 
         return self
@@ -43,6 +42,13 @@ class BasePage:
             return self.wait().until(EC.visibility_of_element_located(locator))
         except TimeoutException:
             raise AssertionError(f"Not found locator: {locator}")
+
+    def finds(self, locators):
+        try:
+            return self.wait().until(
+                EC.visibility_of_all_elements_located(locators))
+        except TimeoutException:
+            raise AssertionError(f"Not found locators: {locators}")
 
     def click(self, locator):
         self.find(locator).click()
@@ -62,3 +68,6 @@ class BasePage:
 
     def is_element_by_locator_is_not_visible(self, locator):
         return self.find(locator)
+
+    def accept_alert(self):
+        self.browser.switch_to.alert.accept()
