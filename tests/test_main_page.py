@@ -1,42 +1,56 @@
-class TestMainPage:
-    def test_open_main_page(self, browser, main_page):
-        main_page.open_main_page(browser)
+from tests.base_test import BaseTest
 
-        main_page.assert_main_page_title(browser)
 
-    def test_change_currency_euro(self, browser, main_page):
-        main_page.open_main_page(browser)
-        main_page.click_on_currency_drop_down(browser)
-        main_page.click_on_currency_eur(browser)
+class TestMainPage(BaseTest):
 
-        assert main_page.get_currency_value(browser) == "€" \
+    def test_main_page_title(self):
+        self.main_page.open()
+
+        assert self.main_page.title == "Your Store", \
+            f"Incorrect browser title:{self.main_page.title}"
+
+    def test_change_currency_euro(self):
+        self.main_page.open()
+
+        all_currency = self.main_page.get_all_currency()
+        assert len(all_currency) == 3, "Incorrect numbers of currency"
+
+        self.main_page.change_currency_euro()
+        assert self.main_page.get_currency_value() == "€" \
+            , "Incorrect currency value"
+
+        self.main_page.change_currency_pound()
+        assert self.main_page.get_currency_value() == "£" \
+            , "Incorrect currency value"
+
+        self.main_page.change_currency_us()
+        assert self.main_page.get_currency_value() == "$" \
             , "Incorrect currency value"
 
 
-class TestCatalog:
-    def test_navigate_all_desktops(self, browser, main_page):
-        main_page.open_main_page(browser)
-        main_page.click_on_desktops_tab(browser)
-        main_page.click_on_show_all_desktops(browser)
+class TestCatalog(BaseTest):
+    def test_navigate_all_desktops(self):
+        self.main_page.open()
+        self.main_page.navigate_to_desktops()
 
-        assert main_page.get_product_directory(browser) == "Desktops" \
+        assert self.main_page.get_product_directory() == "Desktops" \
             , "Incorrect product directory"
-        assert browser.current_url.endswith("/catalog/desktops") \
+        assert self.main_page.current_url.endswith("/catalog/desktops") \
             , "Incorrect path in url"
 
 
-class TestItemCard:
-    def test_add_macbook_to_cart(self, browser, main_page):
-        main_page.open_main_page(browser)
-        main_page.click_on_macbook(browser)
-        main_page.click_on_add_to_cart_button(browser)
-        main_page.check_alert_add_to_card_is_visible(browser)
+class TestItemCard(BaseTest):
+    def test_add_macbook_to_cart(self):
+        self.main_page.open()
+        self.main_page.click_on_macbook()
+        self.main_page.click_on_add_to_cart_button()
+        self.main_page.check_alert_add_to_card_is_visible()
 
-        assert main_page.get_alert_add_to_card_text(browser) == \
+        assert self.main_page.get_alert_add_to_card_text() == \
                "Success: You have added MacBook to your shopping cart!" \
             , "Incorrect text in alert add to card"
 
-        main_page.check_alert_add_to_card_is_invisible(browser)
+        self.main_page.check_alert_add_to_card_is_invisible()
 
-        assert main_page.get_cart_text(browser) == "1 item(s) - $602.00" \
+        assert self.main_page.get_cart_text() == "1 item(s) - $602.00" \
             , "Incorrect text in cart"
