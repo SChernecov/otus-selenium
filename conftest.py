@@ -1,4 +1,7 @@
+import datetime
+
 import pytest
+import logging
 from selenium import webdriver
 from selenium.webdriver.chrome import service
 from selenium.webdriver.chrome.service import Service
@@ -37,12 +40,30 @@ def pytest_addoption(parser):
     parser.addoption(
         "--url", help="Base application url"
     )
+    parser.addoption(
+        "--log_level",
+        default="DEBUG",
+        help="Logging level: DEBUG, INFO, WARNING, ERROR or CRITICAL"
+    )
 
 
 @pytest.fixture()
 def browser(request):
     headless = request.config.getoption("--headless")
     browser_name = request.config.getoption("--browser")
+    log_level = request.config.getoption("--log_level")
+
+    logger = logging.getLogger(request.node.name)
+    file_handler = logging.FileHandler(f"logs/{request.node.name}.log",
+                                       mode="w")
+    file_handler.setFormatter(logging.Formatter(
+        "%(levelname)s - %(asctime)s - %(message)s - %(name)s - %(filename)s"))
+    logger.addHandler(file_handler)
+    logger.setLevel(level=log_level)
+
+    logger.info("=== Test <%s> started ===" % (
+        request.node.name))
+
     if browser_name == "chrome":
         options = ChromeOptions()
         if headless:
@@ -81,6 +102,14 @@ def browser(request):
 
     driver.url = request.config.getoption("--url")
 
+    driver.log_level = log_level
+    driver.logger = logger
+    driver.test_name = request.node.name
+
+    logger.info("== Browser %s started ==" % browser_name)
+
     yield driver
 
     driver.close()
+
+    logger.info("== Browser %s closed ==" % browser_name)
