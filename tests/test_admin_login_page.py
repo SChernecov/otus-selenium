@@ -1,7 +1,8 @@
+import allure
 from tests.base_test import BaseTestAdminPage
 from models.randoms.fake import random_letters
 
-
+@allure.feature("Test admin page")
 class TestAdminPage(BaseTestAdminPage):
     def test_open_admin_login_page(self):
         self.admin_login_page.open()
