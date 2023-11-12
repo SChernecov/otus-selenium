@@ -1,3 +1,4 @@
+import allure
 from selenium.common import WebDriverException, TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -33,6 +34,7 @@ class BasePage:
             timeout = WAIT_ELEMENT_TIMEOUT
         return WebDriverWait(self.browser, timeout=timeout)
 
+    @allure.step
     def open_page(self, locator):
         self.logger.debug(
             "%s: Open page: %s" % (self.class_name, str(locator)))
@@ -47,6 +49,7 @@ class BasePage:
 
         return self
 
+    @allure.step
     def find(self, locator):
         self.logger.debug(
             "%s: Find: %s" % (self.class_name, str(locator)))
@@ -55,6 +58,7 @@ class BasePage:
         except TimeoutException:
             raise AssertionError(f"Not found locator: {locator}")
 
+    @allure.step
     def finds(self, locators):
         self.logger.debug(
             "%s: Finds: %s" % (self.class_name, str(locators)))
@@ -64,11 +68,13 @@ class BasePage:
         except TimeoutException:
             raise AssertionError(f"Not found locators: {locators}")
 
+    @allure.step
     def click(self, locator):
         self.logger.debug(
             "%s: Clicking element: %s" % (self.class_name, str(locator)))
         self.find(locator).click()
 
+    @allure.step
     def get_text(self, locator):
         self.logger.debug(
             "%s: Get text: %s" % (self.class_name, str(locator)))
@@ -79,22 +85,26 @@ class BasePage:
             "%s: Clear: %s" % (self.class_name, str(locator)))
         self.find(locator).clear()
 
+    @allure.step
     def send_keys(self, locator, text):
         self.logger.debug(
             "%s: Send keys to: %s" % (self.class_name, str(locator)))
         self.clear(locator)
         self.find(locator).send_keys(text)
 
+    @allure.step
     def is_element_by_locator_is_visible(self, locator):
         self.logger.debug(
             "%s: Check visibility of: %s" % (self.class_name, str(locator)))
         return self.find(locator)
 
+    @allure.step
     def is_element_by_locator_is_not_visible(self, locator):
         self.logger.debug(
             "%s: Check invisibility of: %s" % (self.class_name, str(locator)))
         return self.find(locator)
 
+    @allure.step
     def accept_alert(self):
         self.logger.debug(
             "%s: Accept alert" % (self.class_name))
