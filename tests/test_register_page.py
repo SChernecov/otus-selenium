@@ -1,8 +1,10 @@
+import allure
 from tests.base_test import BaseTest
 from models.randoms.fake import random_letters, random_email
 from tests.base_test import BaseTestRegisterPage
 
 
+@allure.feature("Test register page")
 class TestRegisterPage(BaseTestRegisterPage):
 
     def test_open_register_page(self):
