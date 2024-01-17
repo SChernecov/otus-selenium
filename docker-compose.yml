@@ -1,0 +1,77 @@
+version: '3'
+
+networks:
+  default:
+    external: true
+    name: ${NETWORK_NAME:-selenoid}
+
+services:
+
+  selenoid-ui:
+    image: "aerokube/selenoid-ui"
+    links:
+      - selenoid
+    ports:
+      - "8081:8080"
+    command: ["--selenoid-uri", "http://selenoid:4444"]
+  
+  selenoid:
+    image: aerokube/selenoid:latest-release
+    volumes:
+      - "./config:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: ["-conf", "/etc/selenoid/browsers.json", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "${NETWORK_NAME:-selenoid}" ]
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:4444/ping" ]
+    ports:
+      - "4444:4444"
+   
+
+  phpadmin:
+    image: phpmyadmin:5.2
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_USER=bn_opencart
+    ports:
+      - '8888:80'
+
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.6
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_opencart
+      - MARIADB_DATABASE=bitnami_opencart
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+    ports:
+      - '3306:3306'
+
+  opencart:
+    image: docker.io/bitnami/opencart:4
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      - OPENCART_HOST=opencart:8080
+      - OPENCART_DATABASE_HOST=mariadb
+      - OPENCART_DATABASE_PORT_NUMBER=3306
+      - OPENCART_PHPADMIN_PORT_NUMBER=8888
+      - OPENCART_DATABASE_USER=bn_opencart
+      - OPENCART_DATABASE_NAME=bitnami_opencart
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'opencart_data:/bitnami/opencart'
+      - 'opencart_storage_data:/bitnami/opencart_storage/'
+    depends_on:
+      - mariadb
+      - phpadmin
+volumes:
+  mariadb_data:
+    driver: local
+  opencart_data:
+    driver: local
+  opencart_storage_data:
+    driver: local
+    
+    
