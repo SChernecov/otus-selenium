@@ -4,6 +4,7 @@ import datetime
 import allure
 import pytest
 import logging
+
 from selenium import webdriver
 from selenium.webdriver.chrome import service
 from selenium.webdriver.chrome.service import Service
@@ -28,22 +29,22 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--chrome_driver_path",
-        default="C:\Drivers\chromedriver_win32\chromedriver.exe",
+        default=r"C:\Drivers\chromedriver_win32\chromedriver.exe",
         help="Path to chrome driver"
     )
     parser.addoption(
         "--yandex_driver_path",
-        default="C:\Drivers\yandexdriver\yandexdriver.exe",
+        default=r"C:\Drivers\yandexdriver\yandexdriver.exe",
         help="Path to yandex driver"
     )
     parser.addoption(
         "--opera_driver_path",
-        default="C:\Drivers\operadriver\operadriver.exe",
+        default=r"C:\Drivers\operadriver\operadriver.exe",
         help="Path to opera driver"
     )
     parser.addoption(
         "--opera_browser_path",
-        default="C:\Opera\opera.exe",
+        default=r"C:\Opera\opera.exe",
         help="Path to opera driver"
     )
     parser.addoption(
@@ -94,7 +95,7 @@ def browser(request):
     log_level = request.config.getoption("--log_level")
     remote = request.config.getoption("--remote")
     vnc = request.config.getoption("--vnc")
-    version = request.config.getoption("--bv")
+    version = str(request.config.getoption("--bv"))
     video = request.config.getoption("--video")
     logs = request.config.getoption("--logs")
 
@@ -123,9 +124,29 @@ def browser(request):
             driver = webdriver.Chrome(service=service, options=options)
     elif browser_name == "firefox":
         options = FFOptions()
-        if headless:
-            options.add_argument("--headless=new")
-        driver = webdriver.Firefox(options=options)
+        if remote:
+            caps = {
+                "browserName": browser_name,
+                "browserVersion": version,
+                "selenoid:options": {
+                    "enableVNC": vnc,
+                    "screenResolution": "1280x2000",
+                    "enableVideo": video,
+                    "enableLog": logs,
+                    "timeZone": "Europe/Moscow"
+                },
+                "acceptInsecureCerts": True
+            }
+
+            for k, v in caps.items():
+                options.set_capability(k, v)
+
+            driver = webdriver.Remote(
+                command_executor=remote_url,
+                options=options
+            )
+        else:
+            driver = webdriver.Firefox(options=options)
     elif browser_name == "yandex":
         options = ChromeOptions()
         service = Service(
@@ -153,28 +174,6 @@ def browser(request):
     if request.config.getoption("--max"):
         driver.maximize_window()
 
-    if request.config.getoption("--remote"):
-        caps = {
-            "browserName": browser_name,
-            "browserVersion": version,
-            "selenoid:options": {
-                "enableVNC": vnc,
-                "screenResolution": "1280x2000",
-                "enableVideo": video,
-                "enableLog": logs,
-                "timeZone": "Europe/Moscow"
-            },
-            "acceptInsecureCerts": True
-        }
-
-        for k, v in caps.items():
-            options.set_capability(k, v)
-
-        driver = webdriver.Remote(
-            command_executor=remote_url,
-            options=options
-        )
-
     driver.url = request.config.getoption("--url")
 
     driver.log_level = log_level
@@ -185,6 +184,6 @@ def browser(request):
 
     yield driver
 
-    driver.close()
+    driver.quit()
 
     logger.info("== Browser %s closed ==" % browser_name)
