@@ -69,11 +69,3 @@ services:
     build: .
     image: tests
     command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
-      
-volumes:
-  opencart_data:
-    driver: local
-  opencart_storage_data:
-    driver: local
-    
-    
