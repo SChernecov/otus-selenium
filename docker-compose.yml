@@ -68,7 +68,7 @@ services:
     tty: true
     build: .
     image: tests
-    command: command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
+    command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
       
 volumes:
   opencart_data:
