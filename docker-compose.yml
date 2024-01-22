@@ -16,6 +16,7 @@ services:
     #command: ["--selenoid-uri", "http://selenoid:4444"]
   
   selenoid:
+    tty: true
     image: aerokube/selenoid:latest-release
     volumes:
       - "./config:/etc/selenoid"
