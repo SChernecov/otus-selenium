@@ -69,7 +69,7 @@ services:
       
   tests:
     image: tests
-    command: docker run --rm --network selenoid tests pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
+    command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
       
 volumes:
   mariadb_data:
