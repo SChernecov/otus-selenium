@@ -7,13 +7,13 @@ networks:
 
 services:
 
-  selenoid-ui:
-    image: "aerokube/selenoid-ui"
-    links:
-      - selenoid
-    ports:
-      - "8081:8080"
-    command: ["--selenoid-uri", "http://selenoid:4444"]
+  #selenoid-ui:
+    #image: "aerokube/selenoid-ui"
+    #links:
+     # - selenoid
+    #ports:
+     # - "8081:8080"
+    #command: ["--selenoid-uri", "http://selenoid:4444"]
   
   selenoid:
     image: aerokube/selenoid:latest-release
@@ -67,3 +67,6 @@ services:
     build: .
     image: tests
     command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
+    depends_on:
+      - opencart
+      - selenoid
