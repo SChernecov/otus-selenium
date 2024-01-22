@@ -60,9 +60,6 @@ services:
       - OPENCART_DATABASE_USER=bn_opencart
       - OPENCART_DATABASE_NAME=bitnami_opencart
       - ALLOW_EMPTY_PASSWORD=yes
-    volumes:
-      - 'opencart_data:/bitnami/opencart'
-      - 'opencart_storage_data:/bitnami/opencart_storage/'
     depends_on:
       - mariadb
       - phpadmin
@@ -74,8 +71,6 @@ services:
     command: command: pytest tests/test_main_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080
       
 volumes:
-  mariadb_data:
-    driver: local
   opencart_data:
     driver: local
   opencart_storage_data:
