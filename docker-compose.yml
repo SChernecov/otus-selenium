@@ -55,6 +55,7 @@ services:
       - '443:8443'
     environment:
       - OPENCART_HOST=opencart:8080
+      #- OPENCART_HOST=localhost
       - OPENCART_DATABASE_HOST=mariadb
       - OPENCART_DATABASE_PORT_NUMBER=3306
       - OPENCART_PHPADMIN_PORT_NUMBER=8888
