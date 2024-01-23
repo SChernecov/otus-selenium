@@ -20,7 +20,7 @@ class MainPage(BasePage):
 
     CURRENCY_VALUE_LOCATOR = (By.CSS_SELECTOR, "form .dropdown strong")
     DESKTOPS_TAB_LOCATOR = (
-        By.CSS_SELECTOR, ".container .nav-item.dropdown:nth-of-type(1)")
+        By.CSS_SELECTOR, "div#narbar-menu > ul > li:nth-of-type(1)")
     SHOW_ALL_DESKTOPS_LOCATOR = (
         By.CSS_SELECTOR,
         ".container .nav-item.dropdown:nth-of-type(1) .see-all")
@@ -64,7 +64,6 @@ class MainPage(BasePage):
         return self.get_text(MainPage.CURRENCY_VALUE_LOCATOR)
 
     def navigate_to_desktops(self):
-        self.find(MainPage.DESKTOPS_TAB_LOCATOR)
         self.click(MainPage.DESKTOPS_TAB_LOCATOR)
         self.click(MainPage.SHOW_ALL_DESKTOPS_LOCATOR)
 
