@@ -70,7 +70,7 @@ services:
     command:
       - '/bin/sh'
       - '-c'
-      - '/bin/sleep 30 && pytest tests/test_register_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080/en-gb?route=account/register'
+      - '/bin/sleep 30 && pytest tests/test_register_page.py -s -l -v --remote=selenoid --browser=chrome --vnc --url=http://opencart:8080/en-gb?route=account/register' --alluredir=allure-results
     depends_on:
       - opencart
       - selenoid
