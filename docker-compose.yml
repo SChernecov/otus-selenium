@@ -64,6 +64,9 @@ services:
     depends_on:
       - mariadb
       - phpadmin
+    volumes:
+      - 'opencart_data:/bitnami/opencart'
+      - 'opencart_storage_data:/bitnami/opencart_storage/'
       
   tests:
     tty: true
@@ -73,9 +76,6 @@ services:
       - '/bin/sh'
       - '-c'
       - '/bin/sleep 30 && pytest tests/test_register_page.py -s -l -v --remote=selenoid --browser=chrome --vnc -n auto  --alluredir=allure-results  --url=http://opencart:8080/admin'
-    volumes:
-      - 'opencart_data:/bitnami/opencart'
-      - 'opencart_storage_data:/bitnami/opencart_storage/'
     depends_on:
       - opencart
       - selenoid
