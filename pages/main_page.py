@@ -20,7 +20,7 @@ class MainPage(BasePage):
 
     CURRENCY_VALUE_LOCATOR = (By.CSS_SELECTOR, "form .dropdown strong")
     DESKTOPS_TAB_LOCATOR = (
-        By.CSS_SELECTOR, "div#narbar-menu > ul > li:nth-of-type(1)")
+        By.CSS_SELECTOR, ".container .nav-item.dropdown:nth-of-type(1)")
     SHOW_ALL_DESKTOPS_LOCATOR = (
         By.CSS_SELECTOR,
         ".container .nav-item.dropdown:nth-of-type(1) .see-all")
