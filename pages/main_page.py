@@ -64,6 +64,7 @@ class MainPage(BasePage):
         return self.get_text(MainPage.CURRENCY_VALUE_LOCATOR)
 
     def navigate_to_desktops(self):
+        self.find(MainPage.DESKTOPS_TAB_LOCATOR)
         self.click(MainPage.DESKTOPS_TAB_LOCATOR)
         self.click(MainPage.SHOW_ALL_DESKTOPS_LOCATOR)
 
